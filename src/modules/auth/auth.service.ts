@@ -57,7 +57,7 @@ export class AuthService {
 
     if (checkExistAccount) {
       throw new HttpErrorResponse(
-        `Tài khoản ${body.userName} đã tồn tại - Xin vui lòng thử lại !!!`,
+        `The account ${body.userName} already exists - Please try again!!!`,
         0,
         HttpStatus.INTERNAL_SERVER_ERROR,
         {},
@@ -101,13 +101,5 @@ export class AuthService {
         null,
       );
     }
-  }
-
-  async deleteUser(id: number) {
-    await this.userRepository.delete(id);
-
-    try {
-      const findUser = await this.userRepository.findOne({ where: { id: id } });
-    } catch (error) {}
   }
 }

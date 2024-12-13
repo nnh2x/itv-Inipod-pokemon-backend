@@ -2,12 +2,15 @@
 import {
   CanActivate,
   ExecutionContext,
+  HttpStatus,
   Injectable,
   UnauthorizedException,
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { Request } from 'express';
 import { AuthService } from './auth.service';
+import { HttpErrorResponse } from 'src/common/utils/httpErrorResponse';
+import { AuthPayload } from 'src/interfaces/auth.interface';
 
 @Injectable()
 export class AuthenticationGuard implements CanActivate {
@@ -21,7 +24,12 @@ export class AuthenticationGuard implements CanActivate {
     const token = this.extractTokenFromHeader(request);
 
     if (!token) {
-      throw new UnauthorizedException('Token not found');
+      throw new HttpErrorResponse(
+        `Token is missing. Please provide a valid token.`,
+        0,
+        HttpStatus.FORBIDDEN,
+        {},
+      );
     }
 
     try {
@@ -55,12 +63,15 @@ export class AuthenticationGuard implements CanActivate {
       }
 
       // Verify the token's authenticity
-      const payload = await this.jwtService.verifyAsync(token, {
+      const payload = (await this.jwtService.verifyAsync(token, {
         secret: 'topSecret51',
-      });
-
-      // Attach the payload to the request object
-      request['account'] = payload;
+      })) as AuthPayload;
+      request['user'] = {
+        id: payload.id,
+        userName: payload.userName,
+        iat: payload.iat,
+        exp: payload.exp,
+      };
     } catch (err) {
       console.error('Token verification failed:', err.message || err);
       throw new UnauthorizedException('Invalid token');
