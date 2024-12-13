@@ -1,63 +1,144 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
+# Pokémon Explorer App
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+## Project Overview
+This is a full-stack Pokémon application developed as part of the Inipod Technical Assessment for a Full-stack Engineer position. The application allows users to explore, search, and manage their favorite Pokémon.
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+## Features
+### Frontend (Angular)
+- User Authentication
+  - Signup and login with JWT
+  - Secure authentication system
+- Responsive Layout
+  - Header, Navigation, Footer, and main content area
+- Home Page
+  - Pokémon YouTube video carousel
+  - Initial Pokémon showcase (10 Pokémon)
+- Pokémon List Page
+  - CSV file import functionality
+  - Advanced search and filtering
+    - Name search with 300ms debounce
+    - Filters for type, legendary status, speed
+  - Pagination with configurable page size
+  - Query parameter support for filtering
 
-## Description
+- Pokémon Details
+  - Detailed modal with comprehensive information
+  - Favorite Pokémon management
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+### Backend (Node.js/Nest.js)
+- Database Design
+  - Stores Pokémon data, user information, and favorite lists
+- RESTful API Endpoints
+  - User Authentication (Signup/Login/Logout)
+  - Pokémon Import from CSV
+  - Pokémon List Retrieval with Filtering
+  - Individual Pokémon Details
+  - Favorite Pokémon Management
 
-## Project setup
+## Prerequisites
+- Node.js (v14+ recommended)
+- Angular CLI
+- MongoDB/PostgreSQL
+- npm or yarn
 
+## Installation
+
+### Clone the Repository
 ```bash
-$ yarn install
+git clone https://github.com/your-username/pokemon-explorer.git
+cd pokemon-explorer
 ```
 
-## Compile and run the project
-
+### Backend Setup
 ```bash
-# development
-$ yarn run start
+cd backend
+npm install
+# or
+yarn install
 
-# watch mode
-$ yarn run start:dev
+# Copy and modify environment variables
+cp .env.example .env
 
-# production mode
-$ yarn run start:prod
+# Run database migrations (if applicable)
+npm run migrate
+
+# Start the server
+npm run start:dev
 ```
 
-## Run tests
-
+### Frontend Setup
 ```bash
-# unit tests
-$ yarn run test
+cd frontend
+npm install
+# or
+yarn install
 
-# e2e tests
-$ yarn run test:e2e
+# Configure environment files
+cp src/environments/environment.example.ts src/environments/environment.ts
 
-# test coverage
-$ yarn run test:cov
+# Start the development server
+ng serve
+```
+
+## Running the Application
+- Backend: `npm run start:dev` (typically runs on http://localhost:3000)
+- Frontend: `ng serve` (typically runs on http://localhost:4200)
+
+## Environment Variables
+Create a `.env` file in the backend directory with:
+```
+DATABASE_URL=your_database_connection_string
+JWT_SECRET=your_jwt_secret
+POKEMON_CSV_PATH=path/to/pokemon/csv
+```
+
+## Testing
+```bash
+# Backend tests
+npm run test
+
+# Frontend tests
+ng test
 ```
 
 ## Deployment
+- Backend: Recommended platforms - Heroku, DigitalOcean, AWS
+- Frontend: Netlify, Vercel, or GitHub Pages
 
-feature/inipod-name-feature
+## Technologies Used
+- Frontend
+  - Angular
+  - Tailwind CSS / Angular Material
+  - RxJS
+- Backend
+  - Node.js / Nest.js
+  - TypeORM / Mongoose
+  - JWT for authentication
+- Database
+  - MongoDB or PostgreSQL
+
+## Design Decisions
+- Chose JWT for stateless authentication
+- Implemented 300ms debounce for search to improve performance
+- Used pagination to handle large Pokémon datasets
+- Implemented comprehensive filtering options
+
+## Known Limitations
+- Initial import of Pokémon requires CSV file
+- Performance may vary with large datasets
+- Limited to specific Pokémon attributes in filtering
+
+## Contributing
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
+
+## License
+Distributed under the MIT License. See `LICENSE` for more information.
+
+## Contact
+Your Name - your.email@example.com
+
+Project Link: [https://github.com/your-username/pokemon-explorer](https://github.com/your-username/pokemon-explorer)
