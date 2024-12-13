@@ -9,6 +9,8 @@ import { AuthModule } from './modules/auth/auth.module';
 import { PassportModule } from '@nestjs/passport';
 import { JwtModule } from '@nestjs/jwt';
 import { UserModule } from './modules/user/user.module';
+import { PokemonModule } from './modules/pokemon/pokemon.module';
+import { MulterModule } from '@nestjs/platform-express';
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -25,9 +27,13 @@ import { UserModule } from './modules/user/user.module';
       secret: 'secretKey',
       signOptions: { expiresIn: '7d' },
     }),
+    MulterModule.register({
+      dest: './uploads',
+    }),
     PassportModule,
     AuthModule,
     UserModule,
+    PokemonModule,
   ],
   controllers: [AppController],
   providers: [AppService],

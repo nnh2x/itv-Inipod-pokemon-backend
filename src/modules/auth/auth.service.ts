@@ -11,6 +11,8 @@ import {
 } from 'src/common/utils/httpErrorResponse';
 import { AuthLogin, AuthToken } from 'src/dto/auth.dto';
 import { UserEntity } from 'src/entity/user.entity';
+import { CreateUserDto } from 'src/dto/user.dto';
+import { uuid } from 'uuidv4';
 
 @Injectable()
 export class AuthService {
@@ -23,7 +25,7 @@ export class AuthService {
   async validateUser(
     userName: string,
     password: string,
-  ): Promise<number | null> {
+  ): Promise<string | null> {
     const user = await this.userRepository.findOne({
       where: { userName },
     });
@@ -50,7 +52,7 @@ export class AuthService {
     );
   }
 
-  async register(body: AuthLogin): Promise<UserEntity> {
+  async register(body: CreateUserDto): Promise<UserEntity> {
     const checkExistAccount = await this.userRepository.findOne({
       where: { userName: body.userName },
     });
@@ -66,10 +68,11 @@ export class AuthService {
     const hashedPassword = await bcrypt.hash(body.password, 10);
     const newUser = this.userRepository.create({
       ...body,
+      id: uuid(),
       updatedAt: null,
       password: hashedPassword,
     });
-    return this.userRepository.save(newUser);
+    return await this.userRepository.save(newUser);
   }
 
   async checkOldToken(value: any) {

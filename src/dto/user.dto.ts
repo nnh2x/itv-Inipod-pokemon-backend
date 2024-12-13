@@ -16,12 +16,12 @@ export class CreateUserDto {
 export class DeleteUserDto {
   @ApiProperty()
   @IsNumber()
-  id: number;
+  id: string;
 }
 
 export class ResetPasswordDto {
   @ApiProperty()
-  id: number;
+  id: string;
 
   @ApiProperty()
   newPassword: string;

@@ -1,5 +1,5 @@
 export interface AuthPayload {
-  id: number;
+  id: string;
   userName: string | null;
   updatedAt: string | null;
   iat: number;

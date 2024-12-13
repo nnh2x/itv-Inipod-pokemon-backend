@@ -11,3 +11,11 @@ export class AuthToken {
   @ApiProperty()
   token: string;
 }
+
+export class AuthRegister {
+  @ApiProperty()
+  userName: string;
+
+  @ApiProperty()
+  password: string;
+}

@@ -10,8 +10,8 @@ import {
 // Khởi tạo Entity User login - signup
 @Entity('user')
 export class UserEntity {
-  @PrimaryGeneratedColumn()
-  id: number;
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
 
   @IsNotEmpty()
   @Column({ type: 'varchar', length: 100, nullable: false })
