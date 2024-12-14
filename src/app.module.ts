@@ -11,6 +11,7 @@ import { JwtModule } from '@nestjs/jwt';
 import { UserModule } from './modules/user/user.module';
 import { PokemonModule } from './modules/pokemon/pokemon.module';
 import { MulterModule } from '@nestjs/platform-express';
+import { FavoritesModule } from './modules/favorites/favorites.module';
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -34,6 +35,7 @@ import { MulterModule } from '@nestjs/platform-express';
     AuthModule,
     UserModule,
     PokemonModule,
+    FavoritesModule,
   ],
   controllers: [AppController],
   providers: [AppService],

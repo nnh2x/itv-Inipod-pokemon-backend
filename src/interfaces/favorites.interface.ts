@@ -1,6 +1,12 @@
+export interface UserMarkAsFavorite {
+  id: number;
+  createdAt: string;
+  pokemon: Pokemon[];
+}
+
 export interface Pokemon {
   id: number;
-  createdAt: any;
+  createdAt: string;
   createdBy: any;
   updatedBy: any;
   name: string;
@@ -14,7 +20,7 @@ export interface Pokemon {
   spDefense: number;
   speed: number;
   generation: number;
-  legendary: any;
+  legendary: string;
   image: string;
   ytbUrl: string;
 }
