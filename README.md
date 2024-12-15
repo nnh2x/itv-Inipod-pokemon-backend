@@ -48,6 +48,8 @@ This is a full-stack Pokémon application developed as part of the Inipod Techni
 
 ```
 
+create file .env
+
 ### Backend Setup
 ```bash
 cd backend
@@ -63,21 +65,7 @@ npm run migrate
 
 # Start the server
 npm run start:dev
-```
-
-### Frontend Setup
-```bash
-cd frontend
-npm install
-# or
-yarn install
-
-# Configure environment files
-cp src/environments/environment.example.ts src/environments/environment.ts
-
-# Start the development server
-ng serve
-```
+``
 
 ## Running the Application
 - Backend: `npm run start:dev` (typically runs on http://localhost:3000)
