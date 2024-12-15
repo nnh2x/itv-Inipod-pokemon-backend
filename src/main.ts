@@ -18,6 +18,10 @@ async function bootstrap() {
     `Swagger is running on port http://localhost:${defaultPort}/swagger`,
   );
   await app.listen(defaultPort);
-  app.enableCors();
+  app.enableCors({
+    origin: '*', // Allow all origins
+    methods: 'GET,POST,PUT,DELETE', // Allowed HTTP methods
+    allowedHeaders: 'Content-Type, Authorization', // Allowed headers
+  });
 }
 bootstrap();

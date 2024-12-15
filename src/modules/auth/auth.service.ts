@@ -61,7 +61,7 @@ export class AuthService {
       throw new HttpErrorResponse(
         `The account ${body.userName} already exists - Please try again!!!`,
         0,
-        HttpStatus.INTERNAL_SERVER_ERROR,
+        HttpStatus.OK,
         {},
       );
     }
@@ -72,7 +72,13 @@ export class AuthService {
       updatedAt: null,
       password: hashedPassword,
     });
-    return await this.userRepository.save(newUser);
+    await this.userRepository.save(newUser);
+    throw new HttpErrorResponse(
+      `Create user ${newUser.userName} is successfully`,
+      1,
+      HttpStatus.OK,
+      {},
+    );
   }
 
   async checkOldToken(value: any) {

@@ -6,11 +6,10 @@ import {
   Request,
   Get,
   Query,
-  Param,
-  ParseIntPipe,
   UseGuards,
   UsePipes,
   ValidationPipe,
+  Body,
 } from '@nestjs/common';
 import { PokemonService } from './pokemon.service';
 import { FileInterceptor } from '@nestjs/platform-express';
@@ -21,6 +20,7 @@ import { ApiOkResponse } from '@nestjs/swagger';
 import { PaginateOutput } from 'src/common/page/pagination.page';
 import { QueryPaginationDto } from 'src/common/page/query-pagination.page';
 import { AuthenticationGuard } from '../auth/auth.guard';
+import { PokemonId } from 'src/dto/pokemon.dto';
 
 @Controller('pokemon')
 @UseGuards(AuthenticationGuard)
@@ -56,8 +56,18 @@ export class PokemonController {
     return await this.pokemonService.getPokemons(param);
   }
 
-  @Get('/:id')
-  async getPokemonById(@Request() req, @Param('id', ParseIntPipe) id: number) {
-    return await this.pokemonService.getPokemonById(req, id);
+  @Post('detail')
+  async getPokemonById(@Request() req, @Body() body: PokemonId) {
+    return await this.pokemonService.getPokemonById(req, body);
+  }
+
+  @Post('highest-scores')
+  async getHighestScorePokemonPerType() {
+    return this.pokemonService.getHighestScorePokemonPerType();
+  }
+
+  @Post('distinct-types')
+  async getDistinctTypes() {
+    return this.pokemonService.getDistinctTypes();
   }
 }

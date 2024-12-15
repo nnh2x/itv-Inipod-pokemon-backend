@@ -25,7 +25,7 @@ export class PokemonEntity extends BaseEntity {
   })
   type2: string;
 
-  @Column({ type: 'int', nullable: true })
+  @Column({ type: 'double precision', nullable: true })
   @ApiProperty({
     description: 'Total Pokemon',
     example: '1000',

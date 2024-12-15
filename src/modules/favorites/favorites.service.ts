@@ -66,17 +66,32 @@ export class FavoritesService {
       return existingFavorite;
     }
     const favorite = this.favoriteRepository.create({ user, pokemon });
-    return this.favoriteRepository.save(favorite);
+    return await this.favoriteRepository.save(favorite);
   }
 
-  unmaskAsFavorite(id: number) {
-    return this.favoriteRepository.delete(id);
+  async unmaskAsFavorite(body: FavoritesDto, req: Request) {
+    const loginBy = (await this.getInfo(req)) as AuthPayload;
+    const existingFavorite = await this.favoriteRepository.findOne({
+      where: {
+        user: { id: loginBy.id },
+        pokemon: { id: body.pokemonId },
+      },
+    });
+    if (!existingFavorite) {
+      throw new HttpErrorResponse(
+        'Favorite not found',
+        0,
+        HttpStatus.NOT_FOUND,
+        '',
+      );
+    }
+    return this.favoriteRepository.delete(existingFavorite.id);
   }
 
   async getUserFavorites(req: Request, query?: QueryPaginationDto) {
     const loginBy = (await this.getInfo(req)) as AuthPayload;
     const page = Number(query?.page || 1);
-    const size = Number(query?.size || 10);
+    const size = Number(query?.size + 1000 || 10);
     const [pokemon, total] = await this.favoriteRepository
       .createQueryBuilder('favorite')
       .leftJoinAndSelect('favorite.pokemon', 'pokemon')

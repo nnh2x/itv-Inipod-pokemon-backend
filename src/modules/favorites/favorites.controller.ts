@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   Post,
   Query,
@@ -21,7 +22,7 @@ import { QueryPaginationDto } from 'src/common/page/query-pagination.page';
 export class FavoritesController {
   constructor(private readonly favoritesService: FavoritesService) {}
 
-  @Post('/favorites')
+  @Post('')
   @ApiBody({ type: FavoritesDto })
   markAsFavorite(@Body() body: FavoritesDto, @Request() req) {
     return this.favoritesService.markAsFavorite(body, req);
@@ -30,5 +31,10 @@ export class FavoritesController {
   @Get('/user-favorites')
   getUserFavorites(@Query() param: QueryPaginationDto, @Request() req) {
     return this.favoritesService.getUserFavorites(req, param);
+  }
+
+  @Delete('')
+  unmaskAsFavorite(@Body() body: FavoritesDto, @Request() req) {
+    return this.favoritesService.unmaskAsFavorite(body, req);
   }
 }

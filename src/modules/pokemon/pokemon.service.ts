@@ -6,10 +6,15 @@ import { PokemonEntity } from 'src/entity/pokemon.entity';
 import { Repository } from 'typeorm';
 import { PaginateOutput } from 'src/common/page/pagination.page';
 import { QueryPaginationDto } from 'src/common/page/query-pagination.page';
-import { addLikeFilters } from 'src/common/page/queryOptions.page';
+import {
+  addLikeFilters,
+  addSortOptions,
+} from 'src/common/page/queryOptions.page';
 import { HttpErrorResponse } from 'src/common/utils/httpErrorResponse';
 import { Favorite } from 'src/entity/userFavorite.entity';
 import { AuthPayload } from 'src/interfaces/auth.interface';
+import { PokemonTop } from 'src/interfaces/pokemon.interface';
+import { PokemonId } from 'src/dto/pokemon.dto';
 @Injectable()
 export class PokemonService {
   constructor(
@@ -64,10 +69,8 @@ export class PokemonService {
     const keyQueryFilter = filters ? Object.keys(filters) : [];
     const queryBuilder = this.pokemonRepository.createQueryBuilder('pokemon');
     addLikeFilters(queryBuilder, filters, keyQueryFilter, 'pokemon');
-    queryBuilder
-      .orderBy('pokemon.id', 'ASC')
-      .skip((page - 1) * size)
-      .take(size);
+    addSortOptions(queryBuilder, 'pokemon', query.sorts);
+    queryBuilder.skip((page - 1) * size).take(size);
 
     const [pokemon, total] = await queryBuilder.getManyAndCount();
     const paginateOutput: PaginateOutput<PokemonEntity> = {
@@ -90,11 +93,14 @@ export class PokemonService {
     return user;
   }
 
-  async getPokemonById(req: Request, id: number) {
+  async getPokemonById(req: Request, body: PokemonId) {
     const loginBy = (await this.getInfo(req)) as AuthPayload;
     const pokemon = await this.pokemonRepository.findOne({
-      where: { id: id },
+      where: { id: body.id },
     });
+    if (!pokemon) {
+      throw new HttpErrorResponse('Error', 0, HttpStatus.NOT_FOUND, {});
+    }
     const isFavorite = await this.favoriteRepository.findOne({
       where: {
         pokemon: { id: pokemon.id },
@@ -103,6 +109,7 @@ export class PokemonService {
     });
     const data = {
       ...pokemon,
+      ytbUrl: 'https://www.youtube.com/embed/' + this.refYtbUrl(pokemon.ytbUrl),
       isFavorite: !!isFavorite,
     };
 
@@ -115,5 +122,50 @@ export class PokemonService {
       HttpStatus.CREATED,
       data,
     );
+  }
+  async getHighestScorePokemonPerType(): Promise<any[]> {
+    const query = `
+      WITH ranked_pokemon AS (
+        SELECT 
+          pokemon.type1, 
+          pokemon.id, 
+          pokemon.name, 
+          pokemon.total,
+          pokemon.image,
+          pokemon."ytbUrl",
+          ROW_NUMBER() OVER (PARTITION BY pokemon.type1 ORDER BY pokemon.total DESC) AS rank
+        FROM pokemon
+      )
+      SELECT *
+      FROM ranked_pokemon
+      WHERE rank = 1
+      ORDER BY total DESC;
+    `;
+
+    const data = (await this.pokemonRepository.query(query)) as PokemonTop[];
+    const mapData = data.map((value) => {
+      return {
+        name: value.name,
+        type: value.type1,
+        total: value.total,
+        image: value.image,
+        ytbUrl: 'https://www.youtube.com/embed/' + this.refYtbUrl(value.ytbUrl),
+      };
+    });
+    throw new HttpErrorResponse('', 1, HttpStatus.CREATED, mapData);
+  }
+
+  refYtbUrl(url: string): string {
+    const videoId = url.split('/').pop();
+    return videoId ?? '';
+  }
+
+  async getDistinctTypes(): Promise<string[]> {
+    const result = await this.pokemonRepository
+      .createQueryBuilder('pokemon')
+      .select('DISTINCT type1', 'type1')
+      .getRawMany();
+
+    return result.map((row) => row.type1);
   }
 }

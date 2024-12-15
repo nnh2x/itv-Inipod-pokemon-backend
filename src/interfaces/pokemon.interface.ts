@@ -18,3 +18,13 @@ export interface Pokemon {
   image: string;
   ytbUrl: string;
 }
+
+export interface PokemonTop {
+  type1: string;
+  id: number;
+  name: string;
+  total: number;
+  image: string;
+  ytbUrl: string;
+  rank: string;
+}
