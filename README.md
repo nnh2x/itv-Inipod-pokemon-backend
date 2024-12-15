@@ -45,8 +45,7 @@ This is a full-stack Pokémon application developed as part of the Inipod Techni
 
 ### Clone the Repository
 ```bash
-git clone https://github.com/your-username/pokemon-explorer.git
-cd pokemon-explorer
+
 ```
 
 ### Backend Setup
